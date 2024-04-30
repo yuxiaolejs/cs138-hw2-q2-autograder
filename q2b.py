@@ -1,7 +1,7 @@
 import re
 import random
 
-regex = r'^(REPLACE_THIS_TEXT_WITH_YOUR_REGULAR_EXPRESSION)$'
+regex = r'^(REPLACE_ME_WITH_YOUR_REGEX)$'
 
 def count_AB(string):
     count = 0
@@ -44,8 +44,7 @@ def run(string):
            == count_BA(string)) and valid(string)
     tested = bool(re.match(regex, string))
     if tested != ref:
-        print(f"Failed: {string} => [(exp:{ref} !== act:{tested}) => (ab {count_AB(
-            string)} + ac {count_AC(string)} = ba {count_BA(string)})] => count: {counter}")
+        print(f"Failed: {string} => [(exp:{ref} !== act:{tested}) => (ab {count_AB(string)} + ac {count_AC(string)} = ba {count_BA(string)})] => count: {counter}")
         counter += 1
         return
 
@@ -57,24 +56,26 @@ def generate_string(n):
     return string
 
 
-def generate_string_sequential(n):
+def generate_string_sequential(n,length):
     string = ""
     while n > 0:
-        string += chr(97 + n % 3)
+        string = chr(97 + n % 3) + string
         n = n // 3
+    while len(string) < length:
+        string = "a" + string
     return string
 
 
 def test_sequential(num):
-    for i in range(1, num):
-        if (i % 10000 == 0):
-            print(f"Testing {i}th string")
-        run(generate_string_sequential(i))
-
+    for i in range(1, num + 1):
+        size =  3 ** (i)
+        print("Length of ", i, "has",size, "strings")
+        for j in range(0, size):
+            run(generate_string_sequential(j, i))
 
 def test(num):
     for _ in range(num):
         run(generate_string(100))
 
 
-test_sequential(100000)
+test_sequential(5)
